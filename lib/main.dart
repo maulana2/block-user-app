@@ -1,8 +1,16 @@
+import 'package:cps_soft/presentation/blocs/user_bloc.dart';
 import 'package:cps_soft/routes/app_routes.dart';
+import 'package:cps_soft/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/route_manager.dart';
 
-void main() {
+void main() async {
+  print('running apps');
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
+  setup();
   runApp(const MainApp());
 }
 
@@ -11,11 +19,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'CPS Soft',
-      initialRoute: '/',
-      getPages: AppRoutes.routes,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<UserBloc>(
+          create: (context) => getIt<UserBloc>(),
+        ),
+      ],
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: AppRoutes.routes[0].name,
+        getPages: AppRoutes.routes,
+      ),
     );
   }
 }
