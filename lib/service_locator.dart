@@ -4,6 +4,8 @@ import 'package:cps_soft/data/services/city_service.dart';
 import 'package:cps_soft/data/services/user_service.dart';
 import 'package:cps_soft/domain/usecase/get_city.dart';
 import 'package:cps_soft/domain/usecase/get_users.dart';
+import 'package:cps_soft/domain/usecase/post_user.dart';
+import 'package:cps_soft/presentation/blocs/add-user/add_user_bloc.dart';
 import 'package:cps_soft/presentation/blocs/city/city_bloc.dart';
 import 'package:cps_soft/presentation/blocs/user/user_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,7 +23,14 @@ void setup() {
   );
   getIt.registerLazySingleton<GetUsers>(
       () => GetUsers(userRepository: getIt<UserRepository>()));
-  getIt.registerFactory(() => UserBloc(getUsers: getIt<GetUsers>()));
+  getIt.registerLazySingleton<PostUser>(
+      () => PostUser(userRepository: getIt<UserRepository>()));
+  getIt.registerFactory(() => UserBloc(
+        getUsers: getIt<GetUsers>(),
+      ));
+  getIt.registerFactory(() => AddUserBloc(
+        postUser: getIt<PostUser>(),
+      ));
   getIt.registerFactory(() => CityBloc(getCity: getIt<GetCity>()));
   getIt.registerLazySingleton<CityService>(() => CityService(baseUrl: baseUrl));
   getIt.registerLazySingleton<CityRepository>(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cps_soft/domain/entities/user.dart';
 import 'package:cps_soft/domain/usecase/get_users.dart';
+import 'package:cps_soft/domain/usecase/post_user.dart';
 import 'package:cps_soft/presentation/blocs/user/user_event.dart';
 import 'package:cps_soft/presentation/blocs/user/user_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

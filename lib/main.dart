@@ -1,3 +1,4 @@
+import 'package:cps_soft/presentation/blocs/add-user/add_user_bloc.dart';
 import 'package:cps_soft/presentation/blocs/city/city_bloc.dart';
 import 'package:cps_soft/presentation/blocs/user/user_bloc.dart';
 import 'package:cps_soft/routes/app_routes.dart';
@@ -27,6 +28,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider<CityBloc>(
           create: (context) => getIt<CityBloc>(),
+        ),
+        BlocProvider<AddUserBloc>(
+          create: (context) => getIt<AddUserBloc>(),
         )
       ],
       child: GetMaterialApp(

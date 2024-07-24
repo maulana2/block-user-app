@@ -9,8 +9,8 @@ class AppRoutes {
       page: () => const HomeScreen(),
     ),
     GetPage(
-      name: '/add-user-screen',
-      page: () => const AddUserScreen(),
+      name: '/add-user',
+      page: () => AddUserScreen(),
     ),
   ];
 }

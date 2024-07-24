@@ -1,11 +1,11 @@
 class User {
-  final String id;
+  final String? id;
   final String name;
   final String email;
   final String address;
   final String phoneNumber;
   final String city;
-  final String profileImageUrl;
+  final String? profileImageUrl;
 
   User({
     required this.id,

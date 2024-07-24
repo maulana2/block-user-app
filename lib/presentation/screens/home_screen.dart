@@ -11,6 +11,7 @@ import 'package:cps_soft/utils/constant.dart';
 import 'package:cps_soft/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/route_manager.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -72,102 +73,116 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed('/add-user');
+        },
+        child: Icon(Icons.add),
+        backgroundColor: AppColors.primaryColor,
+      ),
       body: Column(
         children: [
           SearchBarWidget(onChanged: _onSearchChanged),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    _onSortAZ();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor:
-                        isSortedAZ ? AppColors.primaryColor : AppColors.grey,
-                  ),
-                  child: Text(
-                    'A-Z',
-                    style: AppStyles.bodyText1.copyWith(
-                      color: isSortedAZ ? AppColors.white : Colors.black,
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: BlocBuilder<CityBloc, CityState>(
-                    builder: (context, state) {
-                      if (state is CityLoading) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (state is CityLoaded) {
-                        return DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppColors.primaryColor.withOpacity(0.1),
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 10.0),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          hint: Text('Select City'),
-                          value: selectedCity,
-                          onChanged: _onCitySelected,
-                          items: state.city.map((city) {
-                            return DropdownMenuItem<String>(
-                              value: city.name,
-                              child: Text(city.name,
-                                  overflow: TextOverflow.ellipsis),
-                            );
-                          }).toList(),
-                          isExpanded: true,
-                        );
-                      } else if (state is CityError) {
-                        return Center(child: Text('Failed to load cities'));
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),
-                ),
-              ],
+          filterUser(),
+          listUser(),
+        ],
+      ),
+    );
+  }
+
+  Expanded listUser() {
+    return Expanded(
+      child: BlocBuilder<UserBloc, UserState>(
+        builder: (context, state) {
+          if (state is UserLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is UserLoaded || state is UserFiltered) {
+            final users = state is UserLoaded
+                ? state.users
+                : (state as UserFiltered).filteredUsers;
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  return ProfileCard(user: users[index]);
+                },
+              ),
+            );
+          } else if (state is UserError) {
+            print('state.message ${state.message}');
+            if (state.message == 'Timed out') {
+              return ElevatedButton(
+                onPressed: () {},
+                child: Text('Retry'),
+              );
+            } else {
+              return Center(child: Text(state.message));
+            }
+          } else {
+            return Center(child: Text('No users found'));
+          }
+        },
+      ),
+    );
+  }
+
+  Padding filterUser() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              _onSortAZ();
+            },
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              backgroundColor:
+                  isSortedAZ ? AppColors.primaryColor : AppColors.grey,
+            ),
+            child: Text(
+              'A-Z',
+              style: AppStyles.bodyText1.copyWith(
+                color: isSortedAZ ? AppColors.white : Colors.black,
+              ),
             ),
           ),
+          SizedBox(width: 10),
           Expanded(
-            child: BlocBuilder<UserBloc, UserState>(
+            child: BlocBuilder<CityBloc, CityState>(
               builder: (context, state) {
-                if (state is UserLoading) {
+                if (state is CityLoading) {
                   return Center(child: CircularProgressIndicator());
-                } else if (state is UserLoaded || state is UserFiltered) {
-                  final users = state is UserLoaded
-                      ? state.users
-                      : (state as UserFiltered).filteredUsers;
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.builder(
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        return ProfileCard(user: users[index]);
-                      },
+                } else if (state is CityLoaded) {
+                  return DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: AppColors.primaryColor.withOpacity(0.1),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 10.0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
+                    hint: Text('Select City'),
+                    value: selectedCity,
+                    onChanged: _onCitySelected,
+                    items: state.city.map((city) {
+                      return DropdownMenuItem<String>(
+                        value: city.name,
+                        child: Text(city.name, overflow: TextOverflow.ellipsis),
+                      );
+                    }).toList(),
+                    isExpanded: true,
                   );
-                } else if (state is UserError) {
-                  print('state.message ${state.message}');
-                  if (state.message == 'Timed out') {
-                    return ElevatedButton(
-                      onPressed: () {},
-                      child: Text('Retry'),
-                    );
-                  } else {
-                    return Center(child: Text(state.message));
-                  }
+                } else if (state is CityError) {
+                  return Center(child: Text('Failed to load cities'));
                 } else {
-                  return Center(child: Text('No users found'));
+                  return Container();
                 }
               },
             ),

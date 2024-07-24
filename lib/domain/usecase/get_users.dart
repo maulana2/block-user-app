@@ -7,7 +7,6 @@ class GetUsers {
 
   Future<List<User>> call() async {
     List<User> users = await userRepository.fetchUsers();
-    print('User Repository: ${users[0].name}');
     return users;
   }
 }

@@ -10,6 +10,8 @@ abstract class UserState extends Equatable {
 
 class UserInitial extends UserState {}
 
+class UserAddInitial extends UserState {}
+
 class UserLoading extends UserState {}
 
 class UserLoaded extends UserState {
@@ -29,6 +31,8 @@ class UserError extends UserState {
   @override
   List<Object> get props => [message];
 }
+
+class UserPostSuccess extends UserState {}
 
 class UserFiltered extends UserState {
   final List<User> filteredUsers;

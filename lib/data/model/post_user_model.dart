@@ -1,44 +1,35 @@
-class UserModel {
-  final String? id;
+class PostUserModel {
   final String name;
   final String email;
   final String address;
   final String phoneNumber;
   final String city;
-  final String? profileImageUrl;
 
-  UserModel({
-    required this.id,
+  PostUserModel({
     required this.name,
     required this.email,
     required this.address,
     required this.phoneNumber,
     required this.city,
-    required this.profileImageUrl,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'],
+  factory PostUserModel.fromJson(Map<String, dynamic> json) {
+    return PostUserModel(
       name: json['name'],
       email: json['email'],
       address: json['address'],
       phoneNumber: json['phoneNumber'],
       city: json['city'],
-      profileImageUrl:
-          json['profileImageUrl'] ?? 'https://via.placeholder.com/150',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
-      'email': email,
       'address': address,
+      'email': email,
       'phoneNumber': phoneNumber,
       'city': city,
-      'profileImageUrl': profileImageUrl,
     };
   }
 }
