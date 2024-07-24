@@ -9,9 +9,12 @@ abstract class UserEvent extends Equatable {
 
 class FetchUsers extends UserEvent {}
 
+class SortUsersAZ extends UserEvent {}
+
 class SearchUsers extends UserEvent {
   final String query;
-  SearchUsers({required this.query});
+  String? city;
+  SearchUsers({required this.query, required this.city});
 
   @override
   List<Object> get props => [query];

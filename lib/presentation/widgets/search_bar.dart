@@ -18,7 +18,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       child: TextField(
         controller: _controller,
         decoration: InputDecoration(
-          hintText: 'Search...',
+          hintText: 'Search Name',
           prefixIcon: Icon(Icons.search),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

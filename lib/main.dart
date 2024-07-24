@@ -1,4 +1,5 @@
-import 'package:cps_soft/presentation/blocs/user_bloc.dart';
+import 'package:cps_soft/presentation/blocs/city/city_bloc.dart';
+import 'package:cps_soft/presentation/blocs/user/user_bloc.dart';
 import 'package:cps_soft/routes/app_routes.dart';
 import 'package:cps_soft/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,9 @@ class MainApp extends StatelessWidget {
         BlocProvider<UserBloc>(
           create: (context) => getIt<UserBloc>(),
         ),
+        BlocProvider<CityBloc>(
+          create: (context) => getIt<CityBloc>(),
+        )
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

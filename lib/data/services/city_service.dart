@@ -1,22 +1,21 @@
 import 'dart:convert';
 
-import 'package:cps_soft/data/model/user_model.dart';
+import 'package:cps_soft/data/model/city_model.dart';
 import 'package:cps_soft/utils/api_const.dart';
 import 'package:http/http.dart' as http;
 
-class UserService {
+class CityService {
   final String baseUrl;
-  UserService({required this.baseUrl});
+  CityService({required this.baseUrl});
 
-  final String endpoint = ApiConstants.users;
+  final String endpoint = ApiConstants.city;
 
-  Future<List<UserModel>> fetchUsers() async {
+  Future<List<CityModel>> fetchUsers() async {
     final response = await http.get(Uri.parse('$baseUrl$endpoint'));
     print('UserService : ${response.body}');
-
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      return jsonResponse.map((data) => UserModel.fromJson(data)).toList();
+      return jsonResponse.map((data) => CityModel.fromJson(data)).toList();
     } else {
       throw Exception('Failed to load user');
     }
